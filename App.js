@@ -30,11 +30,14 @@ export default function App() {
 
   // === Handles sharing the image with others users
   let openShareDialogAsync = async () => {
+    // Sharing the image on a web browser is not available at the moment
     if (Platform.OS === 'web') {
       alert(`Uh oh, sharing isn't available on your platform`);
       return;
     }
 
+    // Uses the image manipulator to select the image learn more here:
+    //https://docs.expo.dev/versions/latest/sdk/imagemanipulator/
     const imageTmp = await ImageManipulator.manipulateAsync(
       selectedImage.localUri
     );

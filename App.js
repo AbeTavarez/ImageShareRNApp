@@ -1,12 +1,23 @@
 import { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Platform
+} from 'react-native';
 import logo from './assets/logo.png';
 import * as ImagePicker from 'expo-image-picker';
+import * as Sharing from 'expo-sharing';
+import * as ImageManipulator from 'expo-image-manipulator';
 
 export default function App() {
+  // app state to hold the image value
   const [selectedImage, setSelectedImage] = useState(null);
 
+  // === Handles picking an image from device photo gallery
   let openImagePickerAsync = async () => {
     let pickerResults = await ImagePicker.launchImageLibraryAsync();
 
@@ -17,6 +28,20 @@ export default function App() {
     setSelectedImage({ localUri: pickerResults.uri });
   };
 
+  // === Handles sharing the image with others users
+  let openShareDialogAsync = async () => {
+    if (Platform.OS === 'web') {
+      alert(`Uh oh, sharing isn't available on your platform`);
+      return;
+    }
+
+    const imageTmp = await ImageManipulator.manipulateAsync(
+      selectedImage.localUri
+    );
+    await Sharing.shareAsync(imageTmp.uri);
+  };
+
+  // === If an image is selected this will render instead
   if (selectedImage !== null) {
     return (
       <View style={styles.container}>
@@ -24,6 +49,12 @@ export default function App() {
           source={{ uri: selectedImage.localUri }}
           style={styles.thumbnail}
         />
+        <TouchableOpacity
+          style={[styles.button, { marginVertical: 10 }]}
+          onPress={openShareDialogAsync}
+        >
+          <Text style={styles.buttonText}>Share this photo</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -38,7 +69,7 @@ export default function App() {
       </Text>
 
       <TouchableOpacity onPress={openImagePickerAsync} style={styles.button}>
-        <Text style={styles.btnText}>Pick a photo</Text>
+        <Text style={styles.buttonText}>Pick a photo</Text>
       </TouchableOpacity>
     </View>
   );
@@ -67,7 +98,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 5
   },
-  btnText: {
+  buttonText: {
     fontSize: 20,
     color: '#fff'
   },

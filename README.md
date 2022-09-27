@@ -3,6 +3,9 @@
 This is a cross-platform mobile application build with React Native and Expo.
 If you found the app useful, give the repo a star 🌟 it's free!
 
+![image share app](./assets/imageshareapp.jpeg)
+![image share app](./assets/imageshareapp1.PNG)
+
 ## Description
 
 The app will allow you to open your mobile phone's photo gallery and select a photo to share with a friend.
